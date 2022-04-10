@@ -22,10 +22,10 @@ Syntax highlighted code block
 2. List
 
 **Bold** and _Italic_ and `Code` text
-[![fileerror.jpg](https://i.postimg.cc/tTMt2SGm/fileerror.jpg)](https://postimg.cc/WF0k473M)
+
 [Link](url) and ![Image](src)
 ```
-
+[![fileerror.jpg](https://i.postimg.cc/tTMt2SGm/fileerror.jpg)](https://postimg.cc/WF0k473M)  
 For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
 
 ### Jekyll Themes
