@@ -1,4 +1,4 @@
-**Правки в формах**
+**Правки в формах**  
 Вот этот код в actionscript-ах форм:
 
     switch (ff_getElementByName('ff_nm_Category[]').value) {
