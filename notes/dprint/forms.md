@@ -1,5 +1,5 @@
 ## Project name?
-# project-tagline?
+project-tagline?
 
 **Правки в коде:** 
 
