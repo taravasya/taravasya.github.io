@@ -1,4 +1,3 @@
-
 **Правки в коде:** 
 
 В *Scripts / Initialization Script*, в php секции должен быть такой код: 
