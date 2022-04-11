@@ -1,6 +1,106 @@
 **Правки в коде:** 
 
-Вот этот код в actionscript-ах форм:
+В *Scripts / Initialization Script*, в php секции должен быть такой код: 
+
+     <?php
+        $user = JFactory::getUser();
+            if ($user->guest) {
+                echo "var isguest = 1;";
+             } else {
+            echo "var isguest = 0;";
+            }
+        $is_admin = array_search('7', $user->groups);
+        $is_super = array_search('8', $user->groups);
+        $is_manager = array_search('6', $user->groups);
+        if( $is_admin OR $is_super OR $is_manager)
+        {
+            echo
+            "
+            var iscanadmin = 1;
+            function mytoggler()
+            {
+                bfToggleFields('on', 'section', 'sId', bfDeactivateField);
+            }
+            ";
+        }
+        else
+        {
+            echo
+            "
+            var iscanadmin = 0;
+            function mytoggler()
+            {
+                bfToggleFields('off', 'section', 'sId', bfDeactivateField);
+            }
+            ";
+        }
+    ?>
+
+
+Здесь определяется:
+    * текщий пользователь: гость/не гость 
+    * текщий пользователь: имеет ли право получать данные по email
+    * включается/выключается видимость поля **id ПОЛЬЗОВАТЕЛЯ**
+    
+
+Хотя тут получается, что ситуация сродни с функцией **define_discountid();**, когда один и тот же код повторяется во всех инициализациях форм.   
+
+Стоит подумать над тем, чтобы и этот кусок кода перенести в какой-нибудь файл, для того, чтоб не повторять его везде. 
+Тут правда есть сложность, потому, что это не js, а php, который всунут в js. Всё сложно... ))) но решаемо,.. и потому надо обмозговать, как это правильно сделать.
+
+---
+
+В *FORM PIECES / AFTER FORM*
+
+    return '
+    <script>
+         JQuery(document).ready(function()
+         {
+              mytoggler();
+         });
+    </script>
+    ';
+
+
+---
+
+Создать поле: Id ПОЛЬЗОВАТЕЛЯ, и в его настройках:
+value, добвить код:
+    
+    <?php $user = JFactory::getUser();return $user->id;?>
+
+А в *Advanced / Actionscript / Custom / Change*
+добавить такой код:
+
+    function ff_UserId_action(element, action)
+    {
+        switch (action) {
+            case 'change':
+            _discountid = define_discountid();
+            jQuery.ajax({
+                    async: false,
+                    type: "POST",
+                    dataType: 'json',
+                    url: "<?php return JURI::root(true ); ?>/templates/pm/php/get-client-data.php",
+                    data: { id: element.value, discountid: _discountid },    
+                    success: function(json) {
+                        ff_getElementByName('ff_nm_LastName[]').value = json['lastName'];
+                        ff_getElementByName('ff_nm_UserName[]').value = json['name'];
+                        ff_getElementByName('ff_nm_phone[]').value = json['phone'];
+                        ff_getElementByName('ff_nm_email[]').value = json['email'];
+                        ff_getElementByName('ff_nm_Discont[]').value = json['discount'];
+                    }
+            });
+            break;
+            default:;
+        }
+    }
+
+Я так понимаю, ты это везде уже сделал.
+
+---
+
+Вот этот код в actionscript-ах поля **Id ПОЛЬЗОВАТЕЛЯ**:
 
     switch (ff_getElementByName('ff_nm_Category[]').value) {
         case 'Цифровая печать':
@@ -44,7 +144,7 @@
 
 ---
 Для подтягивания данных, после изменений в **поле email**, надо добавить для него в  
-*actionscript - custom - change*  
+*actionscript / custom / change*  
 такой код:  
 
     function ff_email_action(element, action)
@@ -77,54 +177,3 @@
             default:;
         }
     }
-
----
-
-В Initialization Script, в php секции должен быть такой код: 
-
-     <?php
-        $user = JFactory::getUser();
-            if ($user->guest) {
-                echo "var isguest = 1;";
-             } else {
-            echo "var isguest = 0;";
-            }
-        $is_admin = array_search('7', $user->groups);
-        $is_super = array_search('8', $user->groups);
-        $is_manager = array_search('6', $user->groups);
-        if( $is_admin OR $is_super OR $is_manager)
-        {
-            echo
-            "
-            var iscanadmin = 1;
-            function mytoggler()
-            {
-                bfToggleFields('on', 'section', 'sId', bfDeactivateField);
-            }
-            ";
-        }
-        else
-        {
-            echo
-            "
-            var iscanadmin = 0;
-            function mytoggler()
-            {
-                bfToggleFields('off', 'section', 'sId', bfDeactivateField);
-            }
-            ";
-        }
-    ?>
-
-
-Здесь определяется:
-    * текщий пользователь: гость/не гость 
-    * текщий пользователь: имеет ли право получать данные по email
-    * включается/выключается видимость поля **id ПОЛЬЗОВАТЕЛЯ**
-
----
-
-Хотя тут получается, что ситуация сродни с функцией **define_discountid();**, когда один и тот же код повторяется во всех инициализациях форм.   
-
-Стоит подумать над тем, чтобы и этот кусок кода перенести в какой-нибудь файл, для того, чтоб не повторять его везде. 
-Тут правда есть сложность, потому, что это не js, а php, который всунут в js. Всё сложно... ))) но решаемо,.. и потому надо обмозговать, как это правильно сделать.
