@@ -1,0 +1,175 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>fdfdsdfss</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__html"><p><strong>Правки в коде:</strong></p>
+<p>В <em>Scripts / Initialization Script</em>, в php секции должен быть такой код:</p>
+<pre><code> &lt;?php
+    $user = JFactory::getUser();
+        if ($user-&gt;guest) {
+            echo "var isguest = 1;";
+         } else {
+        echo "var isguest = 0;";
+        }
+    $is_admin = array_search('7', $user-&gt;groups);
+    $is_super = array_search('8', $user-&gt;groups);
+    $is_manager = array_search('6', $user-&gt;groups);
+    if( $is_admin OR $is_super OR $is_manager)
+    {
+        echo
+        "
+        var iscanadmin = 1;
+        function mytoggler()
+        {
+            bfToggleFields('on', 'section', 'sId', bfDeactivateField);
+        }
+        ";
+    }
+    else
+    {
+        echo
+        "
+        var iscanadmin = 0;
+        function mytoggler()
+        {
+            bfToggleFields('off', 'section', 'sId', bfDeactivateField);
+        }
+        ";
+    }
+?&gt;
+</code></pre>
+<p>Здесь определяется:</p>
+<ul>
+<li>текщий пользователь: гость/не гость</li>
+<li>текщий пользователь: имеет ли право получать раширенные данные из БД, при заполнении/изменении email</li>
+<li>включается/выключается видимость поля <strong>id ПОЛЬЗОВАТЕЛЯ</strong></li>
+</ul>
+<p>Хотя тут получается, что ситуация сродни с функцией <strong>define_discountid();</strong>, когда один и тот же код повторяется во всех инициализациях форм.</p>
+<p>Стоит подумать над тем, чтобы и этот кусок кода перенести в какой-нибудь файл, для того, чтоб не повторять его везде.<br>
+Тут правда есть сложность, потому, что это не js, а php, который всунут в js. Всё сложно… ))) но решаемо,… и потому надо обмозговать, как это правильно сделать.</p>
+<hr>
+<p>В <em>FORM PIECES / AFTER FORM</em></p>
+<pre><code>return '
+&lt;script&gt;
+     JQuery(document).ready(function()
+     {
+          mytoggler();
+     });
+&lt;/script&gt;
+';
+</code></pre>
+<hr>
+<p>Создать поле: Id ПОЛЬЗОВАТЕЛЯ, и в его настройках:<br>
+value, добвить код:</p>
+<pre><code>&lt;?php $user = JFactory::getUser();return $user-&gt;id;?&gt;
+</code></pre>
+<p>А в <em>Advanced / Actionscript / Custom / Change</em><br>
+добавить такой код:</p>
+<pre><code>function ff_UserId_action(element, action)
+{
+    switch (action) {
+        case 'change':
+        _discountid = define_discountid();
+        jQuery.ajax({
+                async: false,
+                type: "POST",
+                dataType: 'json',
+                url: "&lt;?php return JURI::root(true ); ?&gt;/templates/pm/php/get-client-data.php",
+                data: { id: element.value, discountid: _discountid },    
+                success: function(json) {
+                    ff_getElementByName('ff_nm_LastName[]').value = json['lastName'];
+                    ff_getElementByName('ff_nm_UserName[]').value = json['name'];
+                    ff_getElementByName('ff_nm_phone[]').value = json['phone'];
+                    ff_getElementByName('ff_nm_email[]').value = json['email'];
+                    ff_getElementByName('ff_nm_Discont[]').value = json['discount'];
+                }
+        });
+        break;
+        default:;
+    }
+}
+</code></pre>
+<p>Я так понимаю, ты это везде уже сделал.</p>
+<hr>
+<p>Вот этот код в actionscript-ах поля <strong>Id ПОЛЬЗОВАТЕЛЯ</strong>:</p>
+<pre><code>switch (ff_getElementByName('ff_nm_Category[]').value) {
+    case 'Цифровая печать':
+    case 'Цифровий друк':
+        _discountid = 20
+        break;
+    case 'Офсетная печать':
+    case 'Офсетний друк':
+        _discountid = 21
+        break;
+    case 'Широкоформатная печать':
+    case 'Широкоформатний друк':
+        _discountid = 22
+        break;
+    case 'УФ печать':
+    case 'УФ друк':
+        _discountid = 23
+        break;
+    case 'Сувенирная продукция':
+    case 'Сувенірна продукція':
+        _discountid = 24
+        break;
+    default:;
+}
+</code></pre>
+<p>Можно заменить для унификации, (а можно и оставить как есть) на вызов функции:</p>
+<pre><code>_discountid = define_discountid();
+</code></pre>
+<p>Работать будет и так и так. Но если потом будешь переносить код из форм, то лучше, конечно, добавить одну эту строчку.</p>
+<hr>
+<p>Для того, чтобы <strong>после смены типа печати</strong> правильно работал пересчёт скидки, нужно:<br>
+В actionscript селекта <em>Способ печати</em>, добавить это:</p>
+<pre><code>if (iscanadmin == 1 &amp;&amp; !bfDeactivateField["ff_nm_email[]"]) ff_UserId_action( ff_getElementByName('ff_nm_UserId[]'), 'change');
+if (isguest == 1 &amp;&amp; !bfDeactivateField["ff_nm_email[]"]) ff_email_action( ff_getElementByName('ff_nm_email[]'), 'change');
+</code></pre>
+<p>Ты в форме Евробуклет, добавил только первую строчку. Наверное, во все остальные формы тоже. В евробуклете я дописал вторую строчку.</p>
+<hr>
+<p>Для подтягивания данных, после изменений в <strong>поле email</strong>, надо добавить для него в<br>
+<em>actionscript / custom / change</em><br>
+такой код:</p>
+<pre><code>function ff_email_action(element, action)
+{
+    switch (action) {
+        case 'change':
+        _userid = ff_getElementByName('ff_nm_UserId[]').value;
+        jQuery.ajax({
+                async: false,
+                type: "POST",
+                dataType: 'json',
+                url: "&lt;?php return JURI::root(true ); ?&gt;/templates/pm/php/get-client-data.php",
+                data: { find_email: element.value, discountid: 20 },    
+                success: function(json) {
+                    if (json['lastName']) ff_getElementByName('ff_nm_LastName[]').value = json['lastName'];
+                    if (iscanadmin) ff_getElementByName('ff_nm_LastName[]').value = json['lastName'];
+                    if (json['name']) ff_getElementByName('ff_nm_UserName[]').value = json['name'];
+                    if (iscanadmin) ff_getElementByName('ff_nm_UserName[]').value = json['name'];
+                    if (json['phone']) ff_getElementByName('ff_nm_phone[]').value = json['phone'];
+                    if (iscanadmin) ff_getElementByName('ff_nm_phone[]').value = json['phone'];
+                    if (json['email']) ff_getElementByName('ff_nm_email[]').value = json['email'];
+                    if (iscanadmin) ff_getElementByName('ff_nm_email[]').value = json['email'];
+                    if (json['discount']) ff_getElementByName('ff_nm_Discont[]').value = json['discount'];
+                    if (iscanadmin) ff_getElementByName('ff_nm_Discont[]').value = json['discount'];
+                    if (json['userid']) ff_getElementByName('ff_nm_UserId[]').value = json['userid'];
+                    if (iscanadmin) ff_getElementByName('ff_nm_UserId[]').value = json['userid'];
+                }
+        });
+        break;
+        default:;
+    }
+}
+</code></pre>
+</div>
+</body>
+
+</html>
