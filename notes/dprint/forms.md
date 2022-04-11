@@ -1,3 +1,7 @@
+<link rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script>
+
 **Правки в коде:** 
 
 В *Scripts / Initialization Script*, в php секции должен быть такой код: 
