@@ -5,6 +5,7 @@
 <script>hljs.highlightAll();</script>
 
 **Полезные сслыки:** 
+[Установка Tidal Connect](https://audiophilestyle.com/forums/topic/62703-tidal-connect-on-raspberry-how-to/)
 [Сжатие образа](https://askubuntu.com/a/1390007)
 
 **Команды:**  
