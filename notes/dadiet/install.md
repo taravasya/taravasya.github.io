@@ -4,9 +4,9 @@
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script>
 <script>hljs.highlightAll();</script>
 
-**Полезные сслыки:** 
-[Установка Tidal Connect](https://audiophilestyle.com/forums/topic/62703-tidal-connect-on-raspberry-how-to/)
-[Сжатие образа](https://askubuntu.com/a/1390007)
+**Полезные сслыки:**  
+[Установка Tidal Connect](https://audiophilestyle.com/forums/topic/62703-tidal-connect-on-raspberry-how-to/)  
+[Сжатие образа](https://askubuntu.com/a/1390007)  
 
 **Команды:**  
 TidalConnect
