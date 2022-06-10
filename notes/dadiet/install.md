@@ -5,5 +5,23 @@
 <script>hljs.highlightAll();</script>
 
 **Полезные сслыки:** 
+[Сжатие образа](https://askubuntu.com/a/1390007)
 
-https://askubuntu.com/a/1390007
+**Команды:**  
+TidalConnect
+
+    sudo systemctl start dadiet_nomqa.service
+    sudo systemctl stop dadiet_nomqa.service
+    sudo systemctl status dadiet_nomqa.service
+    sudo systemctl start dadiet_mqa.service
+    sudo systemctl stop dadiet_mqa.service
+    sudo systemctl status dadiet_mqa.service
+    sudo systemctl start dadiet_mqapp.service
+    sudo systemctl stop dadiet_mqapp.service
+    sudo systemctl status dadiet_mqapp.service
+
+**Системные файлы**
+
+    /lib/systemd/system/dadiet_nomqa.service
+    /lib/systemd/system/dadiet_mqa.service
+    /lib/systemd/system/dadiet_mqapp.service
