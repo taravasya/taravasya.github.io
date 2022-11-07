@@ -8,7 +8,7 @@
 
 ---
 
-<pre>&lt;small&gt;&lt;/small&gt;</pre>
+**<pre>&lt;small&gt;&lt;/small&gt;</pre>**
 **Пример использования:**
 
      Обычный текст <small>маленький текст</small>
