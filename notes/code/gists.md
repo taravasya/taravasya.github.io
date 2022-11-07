@@ -3,8 +3,7 @@
 
 <font size="5">**Примеры HTML кодов для редактора:**</font> 
 
----
-<font size="5">**<mark>small</mark>**</font>   
+---  
 **<font size="5"><mark>small</mark></font>**  
 **Пример использования:**
 
@@ -14,7 +13,7 @@
 Обычный текст <small>маленький текст</small>
 
 ----
-<font size="5"><mark>**small**</mark></font> 
+**<font size="5"><mark>small</mark></font>** 
 **Пример использования:**
 
      Обычный текст <small>маленький текст</small>
