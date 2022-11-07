@@ -7,8 +7,7 @@
 # HTML codes
 
 ---
-<font size="6"><mark>small</mark></font>
-## <mark>small</mark>  
+<font size="6"><mark>**small**</mark></font> 
 **Пример использования:**
 
      Обычный текст <small>маленький текст</small>
