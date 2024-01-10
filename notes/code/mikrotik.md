@@ -14,7 +14,7 @@ Dial Out -> Use Peer DNS -> Yes
 
 Создать таблицу меток пакетов:
 
-```mikrotik
+```
 /routing table add name=vpn1_mark fib
 ```
 
