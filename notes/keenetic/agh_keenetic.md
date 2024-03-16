@@ -33,8 +33,6 @@
 
 Создайте файл **/opt/etc/init.d/S52ipset** со следующим содержимым:
 
-Если поддержка ipv6 требуется:
-
     #!/bin/sh
     
     PATH=/opt/sbin:/opt/bin:/opt/usr/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
@@ -44,17 +42,6 @@
         ipset create bypass6 hash:ip family inet6
     fi
 
-Если поддержка ipv6 не требуется:
-
-    #!/bin/sh
-    
-    PATH=/opt/sbin:/opt/bin:/opt/usr/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-    
-    if [ "$1" = "start" ]; then
-        ipset create bypass hash:ip
-    fi
-
-​
 
 Создайте файл **/opt/etc/ndm/netfilter.d/010-bypass.sh** для ipv4  со следующим содержимым:
 
