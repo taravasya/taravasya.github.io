@@ -65,12 +65,14 @@
     [ -z "$(ipset --quiet list bypass)" ] && exit
     
     if [ -z "$(iptables-save | grep bypass)" ]; then
-         mark_id=`curl -kfsS http://localhost:79/rci/show/ip/policy 2>/dev/null | jq -r '.[] | select(.description == "<Имя полиси>") | .mark'`
+         mark_id=`curl -kfsS http://localhost:79/rci/show/ip/policy 2>/dev/null | jq -r '.[] | select(.description == "policy_vpn") | .mark'`
          iptables -w -t mangle -A PREROUTING ! -i nwg0 -m conntrack --ctstate NEW -m set --match-set bypass dst -j CONNMARK --set-mark 0x$mark_id
          iptables -w -t mangle -A PREROUTING ! -i nwg0 -m set --match-set bypass dst -j CONNMARK --restore-mark
     fi
 
-
+Где:
+**nwg0** - это сетевой интерфейс VPN-соединения для выборочного обхода блокировок. 
+**policy_vpn** - это созданная политика в которой был включено VPN-соединение
 
 Создайте файл **/opt/etc/ndm/netfilter.d/011-bypass6.sh** для ipv6 со следующим содержимым:
 
