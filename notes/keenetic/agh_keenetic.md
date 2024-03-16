@@ -70,7 +70,7 @@
          iptables -w -t mangle -A PREROUTING ! -i nwg0 -m set --match-set bypass dst -j CONNMARK --restore-mark
     fi
 
-Где:
+Где:  
 **nwg0** - это сетевой интерфейс VPN-соединения для выборочного обхода блокировок.  
 **policy_vpn** - это созданная политика в которой был включено VPN-соединение
 
@@ -88,7 +88,7 @@
          ip6tables -w -t mangle -A PREROUTING ! -i nwg0 -m set --match-set bypass6 dst -j CONNMARK --restore-mark
     fi
 
-Где:
+Где:  
 **nwg0** - это сетевой интерфейс VPN-соединения для выборочного обхода блокировок.   
 **policy_vpn** - это созданная политика в которой был включено VPN-соединение
 
